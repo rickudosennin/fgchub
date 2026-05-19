@@ -33,13 +33,12 @@
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         .animate-slide-in { animation: slideIn 0.3s ease-out; }
 
-        /* ========== API STATUS INDICATOR (FIXED BOTTOM) ========== */
+        /* ========== API STATUS INDICATOR ========== */
         .api-status-bar { position: fixed; bottom: 10px; right: 10px; z-index: 50; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.9); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(220,38,38,0.5); font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; backdrop-filter: blur(8px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; }
         .status-online { background: #22c55e; box-shadow: 0 0 10px #22c55e; }
         .status-offline { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
         .status-checking { background: #eab308; box-shadow: 0 0 10px #eab308; }
-        .status-warning { background: #f97316; box-shadow: 0 0 10px #f97316; }
 
         /* ========== ATTENDEES SIDEBAR ========== */
         .attendees-sidebar { position: fixed; top: 0; right: 0; width: 100%; max-width: 400px; height: 100vh; z-index: 10000; background: #0b0e13; border-left: 3px solid #dc2626; box-shadow: -10px 0 40px rgba(0,0,0,0.9); transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
@@ -77,47 +76,146 @@
         .history-item:last-child { border-bottom: none; }
         .history-name { color: white; flex: 1; font-size: 11px; font-weight: bold; }
         .history-placement { font-weight: 900; font-size: 12px; }
-
-        /* ========== WINRATE STYLES ========== */
         .history-winrate { font-size: 18px; font-weight: bold; margin-bottom: 12px; }
         .history-winrate-detail { font-size: 11px; color: #aaa; margin-bottom: 8px; }
         .history-winrate-60 { color: #22c55e; }
         .history-winrate-40 { color: #eab308; }
         .history-winrate-0 { color: #ef4444; }
-
-        /* ========== LEGENDA ========== */
-        .legend-bar {
-            display: flex; gap: 12px; padding: 10px 14px;
-            background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3);
-            border-radius: 8px; margin-bottom: 16px; flex-wrap: wrap;
-            position: sticky; top: 0; z-index: 5; backdrop-filter: blur(10px);
-        }
+        .legend-bar { display: flex; gap: 12px; padding: 10px 14px; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 8px; margin-bottom: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; backdrop-filter: blur(10px); }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; color: white; }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .legend-dot.green { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
         .legend-dot.yellow { background: #eab308; box-shadow: 0 0 8px rgba(234,179,8,0.5); }
         .legend-dot.red { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.5); }
 
+        /* ========== RANKING BUTTON (card) ========== */
+        .btn-ranking {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white; font-weight: 900; font-size: 10px; text-transform: uppercase;
+            letter-spacing: 1.5px; padding: 8px 12px; border-radius: 8px;
+            border: 1px solid rgba(168,85,247,0.5); cursor: pointer; text-decoration: none;
+            transition: all 0.2s ease; box-shadow: 0 0 12px rgba(124,58,237,0.3);
+        }
+        .btn-ranking:hover { background: linear-gradient(135deg, #6d28d9, #9333ea); box-shadow: 0 0 22px rgba(124,58,237,0.6); transform: translateY(-1px); }
+
+        /* Badge de liga */
+        .league-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(124,58,237,0.15); border: 1px solid rgba(168,85,247,0.4); color: #c084fc; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
+
+        /* ========== RANKING SIDEBAR ========== */
+        .ranking-sidebar {
+            position: fixed; top: 0; right: 0; width: 100%; max-width: 420px;
+            height: 100vh; z-index: 10000; background: #0b0e13;
+            border-left: 3px solid #7c3aed;
+            box-shadow: -10px 0 40px rgba(124,58,237,0.25);
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .ranking-sidebar.open { transform: translateX(0); }
+
+        .ranking-sidebar-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px;
+            background: rgba(0,0,0,0.95);
+            border-bottom: 2px solid #7c3aed;
+            flex-shrink: 0;
+        }
+        .ranking-sidebar-header .header-left { display: flex; flex-direction: column; gap: 2px; }
+        .ranking-sidebar-header h2 { font-size: 15px; color: white; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin: 0; }
+        .ranking-sidebar-header .league-name { color: #a855f7; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+
+        .btn-close-ranking { background: #7c3aed; color: white; border: none; padding: 10px 18px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 13px; border-radius: 6px; transition: all 0.2s; }
+        .btn-close-ranking:hover { background: #9333ea; box-shadow: 0 0 15px rgba(124,58,237,0.5); }
+
+        .ranking-sidebar-content { flex: 1; overflow-y: auto; padding: 16px 20px; }
+        .ranking-sidebar-content::-webkit-scrollbar { width: 6px; }
+        .ranking-sidebar-content::-webkit-scrollbar-track { background: #111; }
+        .ranking-sidebar-content::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
+
+        /* Card de cada jogador no ranking */
+        .ranking-player-card {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .ranking-player-card:hover { background: rgba(124,58,237,0.1); border-color: rgba(168,85,247,0.35); }
+
+        /* Destaque para top 3 */
+        .ranking-player-card.rank-1 { border-color: rgba(255,204,0,0.45); background: rgba(255,204,0,0.05); }
+        .ranking-player-card.rank-2 { border-color: rgba(192,192,192,0.4); background: rgba(192,192,192,0.04); }
+        .ranking-player-card.rank-3 { border-color: rgba(176,110,60,0.4); background: rgba(176,110,60,0.04); }
+
+        /* Número da colocação */
+        .rank-number {
+            font-size: 20px; font-weight: 900; font-style: italic;
+            min-width: 38px; text-align: center; font-family: 'Georgia', serif;
+        }
+        .rank-number.rank-1 { color: #ffcc00; text-shadow: 0 0 12px rgba(255,204,0,0.5); }
+        .rank-number.rank-2 { color: #c0c0c0; text-shadow: 0 0 12px rgba(192,192,192,0.4); }
+        .rank-number.rank-3 { color: #b06e3c; text-shadow: 0 0 12px rgba(176,110,60,0.4); }
+        .rank-number.rank-other { color: #555; }
+
+        .ranking-player-info { flex: 1; min-width: 0; }
+        .ranking-player-name { color: white; font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ranking-player-pts { color: #a855f7; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; margin-top: 2px; }
+
+        .ranking-flag { width: 28px; height: 20px; border-radius: 3px; object-fit: cover; flex-shrink: 0; }
+        .ranking-flag-placeholder { width: 28px; height: 20px; background: rgba(255,255,255,0.05); border-radius: 3px; flex-shrink: 0; }
+
+        /* Barra de pontos proporcional */
+        .ranking-bar-wrap { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.04); }
+        .ranking-bar-fill { height: 100%; border-radius: 0 2px 2px 0; transition: width 0.6s ease; }
+        .rank-1 .ranking-bar-fill { background: #ffcc00; }
+        .rank-2 .ranking-bar-fill { background: #c0c0c0; }
+        .rank-3 .ranking-bar-fill { background: #b06e3c; }
+        .rank-other-bar { background: #7c3aed; }
+
+        /* Spinner roxo */
+        .spinner-purple { display: inline-block; width: 30px; height: 30px; border: 3px solid #333; border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+        /* Link externo no rodapé da sidebar */
+        .ranking-footer-link {
+            flex-shrink: 0; padding: 12px 20px;
+            border-top: 1px solid rgba(124,58,237,0.2);
+            background: rgba(0,0,0,0.6);
+        }
+        .ranking-footer-link a {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            color: #a855f7; font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; text-decoration: none; padding: 8px;
+            border-radius: 6px; border: 1px solid rgba(168,85,247,0.3);
+            transition: all 0.2s;
+        }
+        .ranking-footer-link a:hover { background: rgba(124,58,237,0.2); border-color: #a855f7; }
+
         @media (max-width: 768px) { 
             .api-status-bar { bottom: 5px; right: 5px; padding: 4px 10px; font-size: 9px; }
-            .attendees-icon-left { display: flex; width: 24px; height: 24px; bottom: 6px; left: 6px; border-radius: 4px; } 
-            .attendees-icon-left i { font-size: 10px; } 
-            .attendees-sidebar { max-width: 100%; border-left: none; } 
-            .sidebar-header { padding: 12px 16px; } 
-            .sidebar-header h2 { font-size: 14px; } 
-            .btn-close { padding: 8px 14px; font-size: 11px; } 
-            .sidebar-content { padding: 12px; } 
-            .attendee-item { padding: 10px 12px; gap: 8px; } 
-            .attendee-name { font-size: 13px; } 
-            .attendee-number { font-size: 11px; min-width: 24px; } 
-            .attendee-flag { width: 22px; height: 16px; } 
-            .player-history { margin-left: 36px; } 
+            .attendees-icon-left { display: flex; width: 24px; height: 24px; bottom: 6px; left: 6px; border-radius: 4px; }
+            .attendees-icon-left i { font-size: 10px; }
+            .attendees-sidebar { max-width: 100%; border-left: none; }
+            .ranking-sidebar { max-width: 100%; border-left: none; }
+            .sidebar-header { padding: 12px 16px; }
+            .sidebar-header h2 { font-size: 14px; }
+            .btn-close { padding: 8px 14px; font-size: 11px; }
+            .sidebar-content { padding: 12px; }
+            .attendee-item { padding: 10px 12px; gap: 8px; }
+            .attendee-name { font-size: 13px; }
+            .attendee-number { font-size: 11px; min-width: 24px; }
+            .attendee-flag { width: 22px; height: 16px; }
+            .player-history { margin-left: 36px; }
         }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
-    <!-- API STATUS INDICATOR (FIXED BOTTOM) -->
+    <!-- API STATUS INDICATOR -->
     <div class="api-status-bar">
         <div id="api_status_dot" class="status-dot status-checking"></div>
         <span id="api_status_text" class="text-slate-300">API: Verificando...</span>
@@ -129,7 +227,7 @@
         </button>
     </div>
 
-    <!-- MODAL CHANGELOG COMPLETO -->
+    <!-- MODAL CHANGELOG -->
     <div id="changelog_modal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleChangelog()"></div>
         <div class="absolute right-0 top-0 h-full w-full max-w-sm glass-card border-l border-red-600 p-6 overflow-y-auto animate-slide-in">
@@ -138,8 +236,20 @@
                 <button onclick="toggleChangelog()" class="text-slate-500 hover:text-white text-2xl">&times;</button>
             </div>
             <div class="space-y-6">
+                <!-- V2.1 (unifica antigas V2.1 + V2.2) -->
+                <div class="border-l-2 border-purple-500 pl-4">
+                    <span class="bg-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded">V2.1</span>
+                    <h3 class="text-white font-bold text-sm uppercase mt-1">Rankings de Liga</h3>
+                    <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
+                        <li>• <span class="text-purple-400 font-bold">Botão RANKING:</span> Torneios vinculados a uma liga exibem badge roxo e botão direto que abre a classificação da liga em painel lateral.</li>
+                        <li>• <span class="text-purple-400 font-bold">Sidebar de Classificação:</span> Painel igual ao de inscritos, com top 3 em 🥇🥈🥉 ouro/prata/bronze, barra de pontos proporcional, bandeiras e total de pontos de cada jogador.</li>
+                        <li>• <span class="text-purple-400 font-bold">Ligas monitoradas:</span> Kombat Ranking MK1 · Kombat Zone Tekken 8 BR 2026 · Kampeonato Brasileiro MK1.</li>
+                        <li>• <span class="text-purple-400 font-bold">Auto-detecção:</span> Cruza o Event Schedule de cada liga com os resultados da pesquisa sem impacto na busca original.</li>
+                        <li>• <span class="text-purple-400 font-bold">Link externo:</span> Rodapé do painel com atalho para ver o ranking completo no start.gg.</li>
+                    </ul>
+                </div>
                 <!-- V2.0 -->
-                <div class="border-l-2 border-red-600 pl-4">
+                <div class="border-l-2 border-red-600 pl-4 opacity-70">
                     <span class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded">V2.0</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">WinRate Real</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
@@ -154,7 +264,7 @@
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Direct API Sync</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
                         <li>• <span class="text-red-400 font-bold">API Key:</span> Conexão direta com start.gg via Client-Side.</li>
-                        <li>• <span class="text-red-400 font-bold">Status Badge:</span> Monitor fixo no rodapé indicando saúde da API.</li>
+                        <li>• <span class="text-red-400 font-bold">Status Badge:</span> Monitor fixo no rodapé indicando saúde da API em tempo real.</li>
                     </ul>
                 </div>
                 <!-- V1.8 -->
@@ -164,8 +274,8 @@
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
                         <li>• <span class="text-red-400 font-bold">Lista de Inscritos:</span> Clique no ícone 👥 no canto inferior esquerdo do banner para ver todos os participantes.</li>
                         <li>• <span class="text-red-400 font-bold">Sidebar Desktop/Mobile:</span> Painel lateral adaptável (400px no desktop, tela cheia no mobile).</li>
-                        <li>• <span class="text-red-400 font-bold">Histórico do Jogador:</span> Clique no nome para ver os últimos 5 torneios.</li>
-                        <li>• <span class="text-red-400 font-bold">Invincible Vs.:</span> Adicionado o jogo Invincible Vs. (IVS) à lista.</li>
+                        <li>• <span class="text-red-400 font-bold">Histórico do Jogador:</span> Clique no nome para ver os últimos 10 torneios com W/L e colocação.</li>
+                        <li>• <span class="text-red-400 font-bold">Invincible Vs.:</span> Adicionado o jogo Invincible Vs. (IVS) à lista de jogos.</li>
                     </ul>
                 </div>
                 <!-- V1.7 -->
@@ -174,7 +284,7 @@
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Live / Streams</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
                         <li>• <span class="text-red-400 font-bold">Live Detection:</span> Badge "LIVE" pulsante automático quando uma partida está em progresso.</li>
-                        <li>• <span class="text-red-400 font-bold">Stream Icons:</span> Identificação visual de Twitch/YT no banner.</li>
+                        <li>• <span class="text-red-400 font-bold">Stream Icons:</span> Identificação visual de Twitch/YT no banner do torneio.</li>
                     </ul>
                 </div>
                 <!-- V1.6 -->
@@ -182,7 +292,7 @@
                     <span class="bg-slate-700 text-white text-[10px] font-black px-2 py-0.5 rounded">V1.6</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Banner do Evento</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
-                        <li>• <span class="text-red-400">Layout Visual:</span> Banner do torneio exibido como fundo dinâmico.</li>
+                        <li>• <span class="text-red-400 font-bold">Layout Visual:</span> Banner do torneio exibido como fundo dinâmico com gradiente nos cards.</li>
                     </ul>
                 </div>
                 <!-- V1.5 -->
@@ -190,7 +300,7 @@
                     <span class="bg-slate-700 text-white text-[10px] font-black px-2 py-0.5 rounded">V1.5</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">TO Responsável</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
-                        <li>• <span class="text-red-400">Identificação:</span> Nome do organizador visível nos cards.</li>
+                        <li>• <span class="text-red-400 font-bold">Identificação:</span> Nome do organizador (Tournament Organizer) visível nos cards de torneio.</li>
                     </ul>
                 </div>
                 <!-- V1.4 -->
@@ -198,7 +308,7 @@
                     <span class="bg-slate-700 text-white text-[10px] font-black px-2 py-0.5 rounded">V1.4</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Inscritos</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
-                        <li>• <span class="text-red-400">Contador:</span> Quantidade de participantes por torneio.</li>
+                        <li>• <span class="text-red-400 font-bold">Contador:</span> Quantidade de participantes inscritos exibida em cada card de torneio.</li>
                     </ul>
                 </div>
                 <!-- V1.3 -->
@@ -206,16 +316,16 @@
                     <span class="bg-slate-700 text-white text-[10px] font-black px-2 py-0.5 rounded">V1.3</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Calendário & Timer</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
-                        <li>• <span class="text-red-400">Timer Regressivo</span> em tempo real para inscrições.</li>
-                        <li>• <span class="text-green-400">Mapa de Disponibilidade:</span> Próximos 14 dias para TOs.</li>
+                        <li>• <span class="text-red-400 font-bold">Timer Regressivo:</span> Contagem regressiva em tempo real até o encerramento das inscrições.</li>
+                        <li>• <span class="text-green-400 font-bold">Mapa de Disponibilidade:</span> Painel com os próximos 14 dias mostrando datas livres e ocupadas para TOs.</li>
                     </ul>
                 </div>
                 <!-- V1.2 -->
                 <div class="border-l-2 border-slate-700 pl-4 opacity-70">
                     <span class="bg-slate-700 text-white text-[10px] font-black px-2 py-0.5 rounded">V1.2</span>
-                    <h3 class="text-white font-bold text-sm uppercase mt-1">Integração</h3>
-                    <ul class="text-[11px] text-slate-400 mt-2">
-                        <li>• Suporte direto ao Google Calendar.</li>
+                    <h3 class="text-white font-bold text-sm uppercase mt-1">Integração Google Calendar</h3>
+                    <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
+                        <li>• <span class="text-red-400 font-bold">Suporte direto ao Google Calendar:</span> Botão para adicionar qualquer torneio diretamente à sua agenda com um clique.</li>
                     </ul>
                 </div>
             </div>
@@ -227,6 +337,27 @@
     <div class="attendees-sidebar" id="attendees_sidebar">
         <div class="sidebar-header"><div><h2>👥 INSCRITOS</h2><span class="count" id="attendees_count"></span></div><button class="btn-close" onclick="fecharAttendees()"><i class="fa-solid fa-times mr-1"></i> VOLTAR</button></div>
         <div class="sidebar-content" id="attendees_content"><div class="loading-attendees"><div class="spinner"></div><p style="margin-top:15px;">Carregando inscritos...</p></div></div>
+    </div>
+
+    <!-- RANKING SIDEBAR -->
+    <div class="overlay" id="ranking_overlay" onclick="fecharRanking()"></div>
+    <div class="ranking-sidebar" id="ranking_sidebar">
+        <div class="ranking-sidebar-header">
+            <div class="header-left">
+                <h2>🏆 CLASSIFICAÇÃO</h2>
+                <span class="league-name" id="ranking_league_name">Carregando...</span>
+            </div>
+            <button class="btn-close-ranking" onclick="fecharRanking()"><i class="fa-solid fa-times mr-1"></i> VOLTAR</button>
+        </div>
+        <div class="ranking-sidebar-content" id="ranking_content">
+            <div class="loading-attendees"><div class="spinner-purple"></div><p style="margin-top:15px;color:#aaa;">Carregando ranking...</p></div>
+        </div>
+        <div class="ranking-footer-link">
+            <a id="ranking_external_link" href="#" target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Ver ranking completo no start.gg
+            </a>
+        </div>
     </div>
 
     <main class="max-w-6xl mx-auto w-full">
@@ -253,19 +384,172 @@
     <script>
         const STARTGG_KEY = 'e679f48b63ff549fc51b2982a711c6ef';
         const STARTGG_API = 'https://api.start.gg/gql/alpha';
-        
+
+        // ==================== LIGAS MONITORADAS ====================
+        const LIGAS_MONITORADAS = [
+            {
+                slug: 'kombat-ranking-mk1',
+                label: 'Kombat Ranking MK1',
+                rankingUrl: 'https://www.start.gg/league/kombat-ranking-mk1/standings'
+            },
+            {
+                slug: 'kombat-zone-ranking-brasil-tekken-8-2026',
+                label: 'Kombat Zone Tekken 8 BR 2026',
+                rankingUrl: 'https://www.start.gg/league/kombat-zone-ranking-brasil-tekken-8-2026/standings'
+            },
+            {
+                slug: 'kampeonato-brasileiro-de-mortal-kombat-1-temporada-1',
+                label: 'Kampeonato Brasileiro MK1',
+                rankingUrl: 'https://www.start.gg/league/kampeonato-brasileiro-de-mortal-kombat-1-temporada-1/standings'
+            }
+        ];
+
+        // Mapa: slug do torneio -> { label, rankingUrl, slug }
+        let leagueTournamentMap = {};
+
         async function callStartGG(query, variables = {}) {
             const res = await fetch(STARTGG_API, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${STARTGG_KEY}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${STARTGG_KEY}` },
                 body: JSON.stringify({ query, variables })
             });
             return await res.json();
         }
 
+        function extrairSlugTorneio(url) {
+            if (!url) return null;
+            const match = url.match(/\/tournament\/([^\/]+)/i);
+            return match ? match[1].toLowerCase() : null;
+        }
+
+        function verificarLigaDeTorneio(tournamentUrl) {
+            const slug = extrairSlugTorneio(tournamentUrl);
+            if (!slug) return null;
+            return leagueTournamentMap[slug] || null;
+        }
+
+        async function carregarTorneiosDasLigas() {
+            const query = `query LeagueEvents($slug: String) {
+                league(slug: $slug) {
+                    events(query: { page: 1, perPage: 100 }) {
+                        nodes { tournament { url } }
+                    }
+                }
+            }`;
+            const fetches = LIGAS_MONITORADAS.map(liga =>
+                callStartGG(query, { slug: liga.slug })
+                    .then(json => {
+                        const nodes = json.data?.league?.events?.nodes || [];
+                        nodes.forEach(node => {
+                            const slug = extrairSlugTorneio(node.tournament?.url);
+                            if (slug) leagueTournamentMap[slug] = { label: liga.label, rankingUrl: liga.rankingUrl, slug: liga.slug };
+                        });
+                    })
+                    .catch(() => {})
+            );
+            await Promise.all(fetches);
+        }
+
+        // ==================== RANKING SIDEBAR ====================
+        const COUNTRY_MAP = {
+            "Brazil":"BR","United States":"US","Argentina":"AR","Chile":"CL","Colombia":"CO",
+            "Mexico":"MX","Peru":"PE","Venezuela":"VE","Ecuador":"EC","Bolivia":"BO",
+            "Paraguay":"PY","Uruguay":"UY","Portugal":"PT","Spain":"ES","France":"FR",
+            "Germany":"DE","Italy":"IT","Japan":"JP","South Korea":"KR","Canada":"CA",
+            "United Kingdom":"GB","Australia":"AU","Netherlands":"NL","Sweden":"SE"
+        };
+
+        async function abrirRanking(ligaSlug, ligaLabel, rankingUrl) {
+            const sidebar   = document.getElementById('ranking_sidebar');
+            const overlay   = document.getElementById('ranking_overlay');
+            const content   = document.getElementById('ranking_content');
+            const leagueEl  = document.getElementById('ranking_league_name');
+            const extLink   = document.getElementById('ranking_external_link');
+
+            // Abre o painel imediatamente com spinner
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            leagueEl.textContent = ligaLabel;
+            extLink.href = rankingUrl;
+            content.innerHTML = `<div class="loading-attendees"><div class="spinner-purple"></div><p style="margin-top:15px;color:#aaa;">Carregando ranking...</p></div>`;
+
+            try {
+                const query = `query LeagueStandings($slug: String) {
+                    league(slug: $slug) {
+                        standings(query: { page: 1, perPage: 25 }) {
+                            nodes {
+                                placement
+                                totalPoints
+                                entrant {
+                                    name
+                                    participants {
+                                        user { location { country } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }`;
+
+                const json = await callStartGG(query, { slug: ligaSlug });
+                const nodes = json.data?.league?.standings?.nodes || [];
+
+                if (nodes.length === 0) {
+                    content.innerHTML = `<div style="text-align:center;padding:40px;color:#aaa;">Nenhum dado de ranking encontrado.</div>`;
+                    return;
+                }
+
+                // Pega o maior número de pontos para calcular as barras proporcionais
+                const maxPts = Math.max(...nodes.map(n => n.totalPoints || 0)) || 1;
+
+                let html = '';
+                nodes.forEach(node => {
+                    const placement = node.placement;
+                    const name      = node.entrant?.name || '—';
+                    const pts       = node.totalPoints ?? 0;
+                    const country   = node.entrant?.participants?.[0]?.user?.location?.country;
+                    const code      = country && COUNTRY_MAP[country] ? COUNTRY_MAP[country].toLowerCase() : null;
+                    const flagHTML  = code
+                        ? `<img src="https://flagcdn.com/w40/${code}.png" class="ranking-flag" alt="${country}">`
+                        : `<div class="ranking-flag-placeholder"></div>`;
+
+                    const rankClass   = placement === 1 ? 'rank-1' : placement === 2 ? 'rank-2' : placement === 3 ? 'rank-3' : '';
+                    const numClass    = placement === 1 ? 'rank-1' : placement === 2 ? 'rank-2' : placement === 3 ? 'rank-3' : 'rank-other';
+                    const barClass    = rankClass || 'rank-other-bar';
+                    const barWidth    = Math.round((pts / maxPts) * 100);
+
+                    // Medalha para top 3
+                    const medal = placement === 1 ? '🥇' : placement === 2 ? '🥈' : placement === 3 ? '🥉' : '';
+
+                    html += `
+                        <div class="ranking-player-card ${rankClass}">
+                            <div class="rank-number ${numClass}">${medal || '#' + placement}</div>
+                            <div class="ranking-player-info">
+                                <div class="ranking-player-name">${name}</div>
+                                <div class="ranking-player-pts">${pts.toLocaleString('pt-BR')} pts</div>
+                            </div>
+                            ${flagHTML}
+                            <div class="ranking-bar-wrap">
+                                <div class="ranking-bar-fill ${rankClass ? '' : 'rank-other-bar'}" style="width:${barWidth}%;${rankClass ? '' : 'background:#7c3aed;'}"></div>
+                            </div>
+                        </div>`;
+                });
+
+                content.innerHTML = html;
+
+            } catch (e) {
+                content.innerHTML = `<div style="text-align:center;padding:40px;color:#ef4444;">Erro ao carregar ranking.</div>`;
+            }
+        }
+
+        function fecharRanking() {
+            document.getElementById('ranking_sidebar').classList.remove('open');
+            document.getElementById('ranking_overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ==================== JOGOS ====================
         const games = [
             { "label": "2XKO", "value": "2XKO", "videogameId": 64423 },
             { "label": "BlazBlue: Central Fiction", "value": "BBCF", "videogameId": 37 },
@@ -299,7 +583,7 @@
             { "label": "Ultimate Marvel vs. Capcom 3", "value": "UMVC3", "videogameId": 10, "hidden": true },
             { "label": "Under Night In-Birth II Sys:Celes", "value": "UNISC", "videogameId": 50203 }
         ];
-        const southAmericanCountries = ["Brazil", "Argentina", "Chile", "Colombia", "Peru", "Uruguay", "Paraguay", "Ecuador", "Bolivia", "Venezuela"];
+        const southAmericanCountries = ["Brazil","Argentina","Chile","Colombia","Peru","Uruguay","Paraguay","Ecuador","Bolivia","Venezuela"];
 
         // ==================== API STATUS MONITOR ====================
         async function checkAPIStatus() {
@@ -309,14 +593,9 @@
                 const start = performance.now();
                 const json = await callStartGG(query);
                 const end = performance.now();
-                if (json.data?.tournaments?.nodes) {
-                    dot.className = 'status-dot status-online';
-                    text.textContent = `API: Online (${Math.round(end-start)}ms)`;
-                } else { throw new Error(); }
-            } catch (e) {
-                dot.className = 'status-dot status-offline';
-                text.textContent = 'API: Offline';
-            }
+                if (json.data?.tournaments?.nodes) { dot.className = 'status-dot status-online'; text.textContent = `API: Online (${Math.round(end-start)}ms)`; }
+                else { throw new Error(); }
+            } catch (e) { dot.className = 'status-dot status-offline'; text.textContent = 'API: Offline'; }
         }
         setInterval(checkAPIStatus, 45000); checkAPIStatus();
 
@@ -331,23 +610,7 @@
         // ==================== WINS/LOSSES POR EVENTO ====================
         async function buscarSetsDoEvento(eventId, playerId) {
             try {
-                const query = `query EventSets($eventId: ID!) {
-                    event(id: $eventId) {
-                        sets(perPage: 100, filters: {hideEmpty: true}) {
-                            nodes {
-                                winnerId
-                                slots {
-                                    entrant {
-                                        id
-                                        participants {
-                                            player { id }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }`;
+                const query = `query EventSets($eventId: ID!) { event(id: $eventId) { sets(perPage: 100, filters: {hideEmpty: true}) { nodes { winnerId slots { entrant { id participants { player { id } } } } } } } }`;
                 const json = await callStartGG(query, { eventId });
                 const sets = json.data?.event?.sets?.nodes || [];
                 let wins = 0, losses = 0;
@@ -355,10 +618,7 @@
                     const playerSlot = set.slots?.find(slot => slot.entrant?.participants?.some(p => p.player?.id == playerId));
                     if (!playerSlot || !playerSlot.entrant) return;
                     const myEntrantId = playerSlot.entrant.id;
-                    if (set.winnerId) {
-                        if (String(set.winnerId) === String(myEntrantId)) wins++;
-                        else losses++;
-                    }
+                    if (set.winnerId) { if (String(set.winnerId) === String(myEntrantId)) wins++; else losses++; }
                 });
                 return { wins, losses, total: wins + losses };
             } catch (e) { return { wins: 0, losses: 0, total: 0, error: true }; }
@@ -369,89 +629,36 @@
             const historyDiv = document.getElementById(`history-${index}`);
             if (!historyDiv) return;
             if (historyDiv.style.display === 'block') { historyDiv.style.display = 'none'; return; }
-
             historyDiv.style.display = 'block';
             historyDiv.innerHTML = '<div class="history-search">🔍 Buscando torneios...</div>';
-
             try {
-                const query1 = `query PlayerHistory($id: ID!) { 
-                    player(id: $id) { 
-                        recentStandings(limit: 10) { 
-                            placement 
-                            container { 
-                                ... on Event { 
-                                    id
-                                    name 
-                                    tournament { name numAttendees } 
-                                } 
-                            } 
-                        } 
-                    } 
-                }`;
+                const query1 = `query PlayerHistory($id: ID!) { player(id: $id) { recentStandings(limit: 10) { placement container { ... on Event { id name tournament { name numAttendees } } } } } }`;
                 const json1 = await callStartGG(query1, { id: playerId });
                 const standings = json1.data?.player?.recentStandings || [];
-
-                if (standings.length === 0) {
-                    historyDiv.innerHTML = `<div class="player-history"><div class="history-title">🔍 ${gamerTag}</div><div class="history-empty">⚠️ Nenhum torneio encontrado.</div></div>`;
-                    return;
-                }
-
+                if (standings.length === 0) { historyDiv.innerHTML = `<div class="player-history"><div class="history-title">🔍 ${gamerTag}</div><div class="history-empty">⚠️ Nenhum torneio encontrado.</div></div>`; return; }
                 let totalWins = 0, totalLosses = 0, torneiosProcessados = 0;
                 const torneiosData = [];
-
                 for (let i = 0; i < standings.length; i++) {
                     const standing = standings[i];
                     const eventId = standing.container?.id;
                     const tournamentName = standing.container?.tournament?.name || 'Torneio';
-
                     historyDiv.innerHTML = `<div class="history-search">🔍 Analisando ${i + 1}/${standings.length} torneios...</div>`;
-
                     if (!eventId) continue;
-
                     const resultado = await buscarSetsDoEvento(eventId, playerId);
-                    if (resultado.total > 0 && !resultado.error) {
-                        totalWins += resultado.wins;
-                        totalLosses += resultado.losses;
-                        torneiosProcessados++;
-                    }
-
-                    torneiosData.push({
-                        name: tournamentName,
-                        wins: resultado.wins,
-                        losses: resultado.losses,
-                        placement: standing.placement,
-                        attendees: standing.container?.tournament?.numAttendees || '?'
-                    });
+                    if (resultado.total > 0 && !resultado.error) { totalWins += resultado.wins; totalLosses += resultado.losses; torneiosProcessados++; }
+                    torneiosData.push({ name: tournamentName, wins: resultado.wins, losses: resultado.losses, placement: standing.placement, attendees: standing.container?.tournament?.numAttendees || '?' });
                 }
-
                 const totalPartidas = totalWins + totalLosses;
                 const winRateGeral = totalPartidas > 0 ? Math.round((totalWins / totalPartidas) * 100) : 0;
                 let wrClass = winRateGeral >= 60 ? 'history-winrate-60' : (winRateGeral >= 40 ? 'history-winrate-40' : 'history-winrate-0');
-
-                let html = `
-                    <div class="player-history">
-                        <div class="history-title">🔍 ${gamerTag}</div>
-                        <div class="legend-bar">
-                            <div class="legend-item"><span class="legend-dot green"></span> 60%+</div>
-                            <div class="legend-item"><span class="legend-dot yellow"></span> 40-59%</div>
-                            <div class="legend-item"><span class="legend-dot red"></span> &lt;40%</div>
-                        </div>
-                        <div class="history-winrate ${wrClass}">📊 WinRate: ${winRateGeral}%</div>
-                        <div class="history-winrate-detail">${totalWins}W / ${totalLosses}L em ${torneiosProcessados} torneios</div>`;
-
+                let html = `<div class="player-history"><div class="history-title">🔍 ${gamerTag}</div><div class="legend-bar"><div class="legend-item"><span class="legend-dot green"></span> 60%+</div><div class="legend-item"><span class="legend-dot yellow"></span> 40-59%</div><div class="legend-item"><span class="legend-dot red"></span> &lt;40%</div></div><div class="history-winrate ${wrClass}">📊 WinRate: ${winRateGeral}%</div><div class="history-winrate-detail">${totalWins}W / ${totalLosses}L em ${torneiosProcessados} torneios</div>`;
                 torneiosData.forEach(t => {
                     const wr = t.wins + t.losses > 0 ? Math.round((t.wins / (t.wins + t.losses)) * 100) : 0;
                     let itemWrClass = wr >= 60 ? 'history-winrate-60' : (wr >= 40 ? 'history-winrate-40' : 'history-winrate-0');
-                    html += `<div class="history-item">
-                        <span class="history-name">${t.name}</span>
-                        <span class="history-placement ${itemWrClass}">${t.wins}W-${t.losses}L (${wr}%) — ${t.placement}º/${t.attendees}</span>
-                    </div>`;
+                    html += `<div class="history-item"><span class="history-name">${t.name}</span><span class="history-placement ${itemWrClass}">${t.wins}W-${t.losses}L (${wr}%) — ${t.placement}º/${t.attendees}</span></div>`;
                 });
-
                 historyDiv.innerHTML = html + `</div>`;
-            } catch (e) {
-                historyDiv.innerHTML = `<div class="player-history"><div class="history-empty">❌ Erro ao buscar histórico.</div></div>`;
-            }
+            } catch (e) { historyDiv.innerHTML = `<div class="player-history"><div class="history-empty">❌ Erro ao buscar histórico.</div></div>`; }
         }
 
         async function abrirAttendees(tournamentUrl) {
@@ -468,18 +675,19 @@
                 if (participants.length === 0) { content.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">Nenhum inscrito encontrado.</div>'; return; }
                 const countryMap = {"Brazil":"BR","United States":"US","Argentina":"AR","Chile":"CL","Colombia":"CO","Mexico":"MX","Peru":"PE","Venezuela":"VE","Ecuador":"EC","Bolivia":"BO","Paraguay":"PY","Uruguay":"UY","Portugal":"PT","Spain":"ES","France":"FR","Germany":"DE","Italy":"IT","Japan":"JP","South Korea":"KR","Canada":"CA"};
                 let html = '';
-                participants.forEach((p, i) => { 
-                    const country = p.user?.location?.country, countryCode = countryMap[country] || null; 
-                    const flagHTML = countryCode ? `<img src="https://flagcdn.com/w40/${countryCode.toLowerCase()}.png" class="attendee-flag" alt="${country}">` : '<div style="width:28px;height:20px;background:rgba(255,255,255,0.05);border-radius:3px;"></div>'; 
+                participants.forEach((p, i) => {
+                    const country = p.user?.location?.country, countryCode = countryMap[country] || null;
+                    const flagHTML = countryCode ? `<img src="https://flagcdn.com/w40/${countryCode.toLowerCase()}.png" class="attendee-flag" alt="${country}">` : '<div style="width:28px;height:20px;background:rgba(255,255,255,0.05);border-radius:3px;"></div>';
                     const safeGamerTag = (p.gamerTag||'Sem nome').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const playerId = p.player?.id || '';
-                    html += `<div class="attendee-item"><span class="attendee-number">#${i+1}</span>${flagHTML}<span class="attendee-name clickable" onclick="event.stopPropagation();toggleHistorico('${playerId}', '${safeGamerTag}', ${i})">${p.gamerTag||'Sem nome'}</span>${p.prefix?`<span style="color:#aaa;font-size:11px;">${p.prefix}</span>`:''}</div><div id="history-${i}" style="display:none;"></div>`; 
+                    html += `<div class="attendee-item"><span class="attendee-number">#${i+1}</span>${flagHTML}<span class="attendee-name clickable" onclick="event.stopPropagation();toggleHistorico('${playerId}', '${safeGamerTag}', ${i})">${p.gamerTag||'Sem nome'}</span>${p.prefix?`<span style="color:#aaa;font-size:11px;">${p.prefix}</span>`:''}</div><div id="history-${i}" style="display:none;"></div>`;
                 });
                 content.innerHTML = html;
             } catch (e) { content.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">Erro ao carregar inscritos.</div>'; }
         }
         function fecharAttendees() { document.getElementById('attendees_sidebar').classList.remove('open'); document.getElementById('attendees_overlay').classList.remove('active'); document.body.style.overflow = ''; }
 
+        // ==================== PESQUISAR ====================
         async function pesquisar() {
             const gameObj = games.find(g => g.value === document.getElementById("campo_jogo").value), typeVal = document.getElementById("campo_tipo").value, localVal = document.getElementById("campo_local").value;
             const container = document.getElementById("resultados"), status = document.getElementById("status"); container.innerHTML = ""; status.classList.remove("hidden");
@@ -496,15 +704,30 @@
                     const banner = t.images?.find(img => img.type==='banner')?.url || t.images?.[0]?.url || '';
                     let streamHTML = ""; const isLiveNow = t.streamQueue && t.streamQueue.some(q => q.sets && q.sets.some(s => s.state===2));
                     if (t.streams && t.streams.length > 0) { const hasTwitch = t.streams.some(s => s.streamSource==='TWITCH'), hasYT = t.streams.some(s => s.streamSource==='YOUTUBE'); streamHTML = `<div style="position:absolute;bottom:8px;right:10px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.7);padding:3px 8px;border-radius:4px;border:1px solid ${isLiveNow?'#dc2626':'rgba(255,255,255,0.1)'}">${isLiveNow?'<span class="animate-pulse flex h-2 w-2 rounded-full bg-red-500 mr-1"></span><span class="text-[9px] font-black text-red-500 uppercase mr-2 tracking-tighter">LIVE</span>':'<span class="text-[9px] font-black text-white uppercase tracking-tighter">Stream:</span>'}${hasTwitch?'<i class="fa-brands fa-twitch text-[#a970ff] text-xs"></i>':''}${hasYT?'<i class="fa-brands fa-youtube text-[#ff0000] text-xs"></i>':''}</div>`; }
+
+                    // ── Liga: badge + botão RANKING que abre a sidebar ──
+                    const ligaInfo = verificarLigaDeTorneio(t.url);
+                    const ligaBadgeHTML = ligaInfo
+                        ? `<div class="league-badge"><i class="fa-solid fa-trophy" style="font-size:8px;color:#a855f7;"></i>&nbsp;${ligaInfo.label}</div>`
+                        : '';
+                    // O botão chama abrirRanking() em vez de navegar
+                    const rankingBtnHTML = ligaInfo
+                        ? `<button onclick="abrirRanking('${ligaInfo.slug}','${ligaInfo.label.replace(/'/g,"\\'")}','${ligaInfo.rankingUrl}')" class="btn-ranking w-full"><i class="fa-solid fa-ranking-star"></i> RANKING</button>`
+                        : '';
+
                     const card = document.createElement("div"); card.className = "glass-card rounded-xl flex flex-col justify-between overflow-hidden";
                     let encHTML = dEnc ? `<div class="mt-1"><p class="text-[10px] text-slate-400 font-bold uppercase italic">Inscrições encerram em: ${dEnc.toLocaleDateString('pt-BR')} às ${dEnc.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</p><p id="${timerId}" class="text-[10px] timer-red uppercase italic">Calculando...</p></div>` : "";
-                    card.innerHTML = `<div style="position:relative;height:130px;overflow:hidden;background:#111;">${banner?`<img src="${banner}" alt="banner" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">`:''}<div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,20,24,0.9) 100%);"></div><div style="position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;"><span class="text-[10px] bg-red-900 text-red-100 px-2 py-1 rounded font-bold uppercase tracking-wider">${typeVal}</span><span class="text-xs text-white font-bold" style="text-shadow:0 1px 4px rgba(0,0,0,0.8)">${new Date(t.startAt*1000).toLocaleDateString('pt-BR')}</span></div><div class="attendees-icon-left" onclick="event.stopPropagation();abrirAttendees('${t.url}')" title="Ver Inscritos"><i class="fa-solid fa-users text-xs"></i></div>${streamHTML}</div><div class="p-5 flex flex-col flex-1"><h3 class="font-bold text-lg text-white mb-2 leading-tight">${t.name}</h3><p class="text-[11px] font-black uppercase ${t.isRegistrationOpen?'text-green-500':'text-red-500'}">${t.isRegistrationOpen?'Inscrição Aberta':'Inscrição Fechada'}</p><div class="flex flex-col gap-1 mt-2"><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-users"></i> ${inscritos} inscrito${inscritos!==1?'s':''}</p><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-crown"></i> TO: ${toName}</p></div>${encHTML}<p class="text-sm text-slate-400 mt-3 italic">${t.addrState?`<i class="fas fa-map-marker-alt"></i> ${t.addrState}`:`<i class="fas fa-globe"></i> ${t.owner?.location?.country||'Online'}`}</p><div class="mt-4 space-y-2"><a href="https://start.gg${t.url}" target="_blank" class="block text-center bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-lg uppercase text-sm tracking-tighter transition shadow-sm">Página do Torneio</a><a href="${gerarLinkGoogleCalendar(t)}" target="_blank" class="block text-center btn-calendar text-slate-300 font-bold py-2 rounded-lg transition uppercase text-[10px] tracking-wider"><i class="fa-solid fa-calendar-plus mr-1"></i> Add ao Google Calendar</a></div></div>`;
+                    card.innerHTML = `<div style="position:relative;height:130px;overflow:hidden;background:#111;">${banner?`<img src="${banner}" alt="banner" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">`:''}<div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,20,24,0.9) 100%);"></div><div style="position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;"><span class="text-[10px] bg-red-900 text-red-100 px-2 py-1 rounded font-bold uppercase tracking-wider">${typeVal}</span><span class="text-xs text-white font-bold" style="text-shadow:0 1px 4px rgba(0,0,0,0.8)">${new Date(t.startAt*1000).toLocaleDateString('pt-BR')}</span></div><div class="attendees-icon-left" onclick="event.stopPropagation();abrirAttendees('${t.url}')" title="Ver Inscritos"><i class="fa-solid fa-users text-xs"></i></div>${streamHTML}</div><div class="p-5 flex flex-col flex-1">${ligaBadgeHTML}<h3 class="font-bold text-lg text-white mb-2 leading-tight">${t.name}</h3><p class="text-[11px] font-black uppercase ${t.isRegistrationOpen?'text-green-500':'text-red-500'}">${t.isRegistrationOpen?'Inscrição Aberta':'Inscrição Fechada'}</p><div class="flex flex-col gap-1 mt-2"><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-users"></i> ${inscritos} inscrito${inscritos!==1?'s':''}</p><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-crown"></i> TO: ${toName}</p></div>${encHTML}<p class="text-sm text-slate-400 mt-3 italic">${t.addrState?`<i class="fas fa-map-marker-alt"></i> ${t.addrState}`:`<i class="fas fa-globe"></i> ${t.owner?.location?.country||'Online'}`}</p><div class="mt-4 space-y-2">${rankingBtnHTML}<a href="https://start.gg${t.url}" target="_blank" class="block text-center bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-lg uppercase text-sm tracking-tighter transition shadow-sm">Página do Torneio</a><a href="${gerarLinkGoogleCalendar(t)}" target="_blank" class="block text-center btn-calendar text-slate-300 font-bold py-2 rounded-lg transition uppercase text-[10px] tracking-wider"><i class="fa-solid fa-calendar-plus mr-1"></i> Add ao Google Calendar</a></div></div>`;
                     container.appendChild(card); if (t.registrationClosesAt) iniciarTimer(timerId, t.registrationClosesAt);
                 });
             } catch (e) { status.classList.add("hidden"); }
         }
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharAttendees(); });
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { fecharAttendees(); fecharRanking(); } });
+
+        // ── INICIALIZAÇÃO ──
         carregarJogos();
+        carregarTorneiosDasLigas();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
