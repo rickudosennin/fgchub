@@ -737,16 +737,20 @@
         function iniciarTimer(id,ts){const a=ts*1000;const i=setInterval(()=>{const e=document.getElementById(id);if(!e){clearInterval(i);return;}const d=a-new Date().getTime();if(d<0){e.innerHTML="INSCRIÇÕES ENCERRADAS";clearInterval(i);return;}const D=Math.floor(d/86400000),h=Math.floor((d%86400000)/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);e.innerHTML=`⏳ Faltam: ${D}d ${h}h ${m}m ${s}s`;},1000);}
         function formatarDataGoogle(ts){return new Date(ts*1000).toISOString().replace(/-|:|\.\d+/g,"");}
         function gerarLinkGoogleCalendar(t){const i=formatarDataGoogle(t.startAt),f=formatarDataGoogle(t.startAt+7200),d=encodeURIComponent(`Inscrição: https://start.gg${t.url}`);return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(t.name)}&dates=${i}/${f}&details=${d}`;}
-        document.getElementById('campo_tipo').addEventListener('change', function(e) { document.getElementById('campo_local').innerHTML = e.target.value === 'offline' ? `<option value="BR">Brasil</option><option value="US">Estados Unidos</option>` : `<option value="south-america">América do Sul</option><option value="worldwide">Mundo Inteiro</option>`; });
+        // Removido o addEventListener que alterava as opções de região – agora as opções permanecem fixas.
 
         async function pesquisar() {
             const gameObj = games.find(g => g.value === document.getElementById("campo_jogo").value), typeVal = document.getElementById("campo_tipo").value, localVal = document.getElementById("campo_local").value;
             const container = document.getElementById("resultados"), status = document.getElementById("status"); container.innerHTML = ""; status.classList.remove("hidden");
-            const query = `query Tournaments($vId:[ID], $isOnline:Boolean, $country:String){tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline, countryCode:$country}}){nodes{name,url,startAt,registrationClosesAt,isRegistrationOpen,addrState,numAttendees,images{url,type},streams{streamName,streamSource},streamQueue{stream{streamName},sets{state}},owner{name,slug,player{gamerTag},location{country}}}}}`;
+            // Query sem countryCode – o filtro por região é feito manualmente depois
+            const query = `query Tournaments($vId:[ID], $isOnline:Boolean){tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline}}){nodes{name,url,startAt,registrationClosesAt,isRegistrationOpen,addrState,numAttendees,images{url,type},streams{streamName,streamSource},streamQueue{stream{streamName},sets{state}},owner{name,slug,player{gamerTag},location{country}}}}}`;
             try {
-                const vars = { vId: [gameObj.videogameId], isOnline: typeVal === "online" }; if (typeVal === "offline") vars.country = localVal;
+                const vars = { vId: [gameObj.videogameId], isOnline: typeVal === "online" };
                 const json = await callStartGG(query, vars); let nodes = json.data?.tournaments?.nodes || [];
-                if (typeVal === "online" && localVal === "south-america") nodes = nodes.filter(t => southAmericanCountries.includes(t.owner?.location?.country));
+                // Filtro de região (América do Sul) aplicado independentemente do formato (online/offline)
+                if (localVal === "south-america") {
+                    nodes = nodes.filter(t => southAmericanCountries.includes(t.owner?.location?.country));
+                }
                 status.classList.add("hidden"); atualizarPainelDisponibilidade(nodes);
                 nodes.forEach((t, i) => {
                     const timerId = `timer_${i}_${Date.now()}`, dEnc = t.registrationClosesAt ? new Date(t.registrationClosesAt*1000) : null, inscritos = t.numAttendees ?? 0;
