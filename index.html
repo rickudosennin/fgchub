@@ -32,6 +32,44 @@
         .day-available { background: rgba(34, 197, 94, 0.1); border-color: #22c55e; color: #22c55e; }
         .day-busy { background: rgba(220, 38, 38, 0.1); border-color: #dc2626; color: #ef4444; }
         .timer-red { color: #dc2626; font-family: monospace; font-weight: bold; }
+        .timer-checkin { color: #3b82f6; font-family: monospace; font-weight: bold; }
+        .timer-checkin-pending { color: #60a5fa; font-family: monospace; font-weight: bold; }
+        .timer-end { color: #6b7280; font-family: monospace; font-weight: bold; }
+        .timer-ready { color: #f59e0b; font-family: monospace; font-weight: bold; }
+        .timer-active { color: #ef4444; font-family: monospace; font-weight: bold; animation: pulse 1.5s infinite; }
+        .timer-completed { color: #22c55e; font-family: monospace; font-weight: bold; }
+        .bracket-live-badge {
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+            white-space: nowrap;
+            box-shadow: 0 0 12px rgba(220,38,38,0.5);
+            display: inline-block;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .bracket-upcoming-badge {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            box-shadow: 0 0 12px rgba(245,158,11,0.5);
+            display: inline-block;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         .animate-slide-in { animation: slideIn 0.3s ease-out; }
 
@@ -232,6 +270,15 @@
             </div>
             <div class="space-y-6">
                 <div class="border-l-2 border-blue-500 pl-4">
+                    <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">V2.3</span>
+                    <h3 class="text-white font-bold text-sm uppercase mt-1">Timer de Check-in & Status da Bracket</h3>
+                    <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
+                        <li>• <span class="text-blue-400 font-bold">Check-in:</span> Timer se adapta automaticamente quando o evento possui check-in habilitado.</li>
+                        <li>• <span class="text-blue-400 font-bold">Transições:</span> Inscrições abertas → Check-in aberto → Bracket iniciando/em andamento/finalizado.</li>
+                        <li>• <span class="text-blue-400 font-bold">ActivityState:</span> Exibe status real do evento (READY, ACTIVE, COMPLETED) após o período de check-in.</li>
+                    </ul>
+                </div>
+                <div class="border-l-2 border-blue-500 pl-4">
                     <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">V2.2</span>
                     <h3 class="text-white font-bold text-sm uppercase mt-1">Bracket Pools & Filters</h3>
                     <ul class="text-[11px] text-slate-400 mt-2 space-y-2">
@@ -413,7 +460,8 @@
             { "label": "Mortal Kombat 1", "value": "MK1", "videogameId": 48599 }, { "label": "Mortal Kombat 11", "value": "MK11", "videogameId": 3200 },
             { "label": "Mortal Kombat X", "value": "MKX", "videogameId": 22 }, { "label": "Ultimate Mortal Kombat 3", "value": "UMK3", "videogameId": 55 },
             { "label": "MultiVersus", "value": "MVS", "videogameId": 45044 }, { "label": "Pocket Bravery", "value": "PB", "videogameId": 44108 },
-            { "label": "Rivals of Aether", "value": "ROA", "videogameId": 24, "hidden": true }, { "label": "SAMURAI SHODOWN", "value": "SS", "videogameId": 3568, "hidden": true },
+            { "label": "Rivals of Aether", "value": "ROA", "videogameId": 24, "hidden": true }, { "label": "Rocket League", "value": "ROCKET_LEAGUE", "videogameId": 17 },
+            { "label": "SAMURAI SHODOWN", "value": "SS", "videogameId": 3568, "hidden": true },
             { "label": "Skullgirls 2nd Encore", "value": "SG", "videogameId": 12 }, { "label": "Street Fighter 6", "value": "SF6", "videogameId": 43868 },
             { "label": "Street Fighter III: 3rd Strike", "value": "SF3", "videogameId": 43 }, { "label": "Super Smash Bros. Melee", "value": "SSBM", "videogameId": 1 },
             { "label": "Super Smash Bros. Ultimate", "value": "SSBU", "videogameId": 1386 }, { "label": "Super Street Fighter II Turbo", "value": "ST", "videogameId": 33 },
@@ -432,11 +480,15 @@
 
         // ==================== LIGAS MONITORADAS ====================
         const LIGAS_MONITORADAS = [
-            { slug: 'kombat-ranking-mk1', label: 'Kombat Ranking MK1', rankingUrl: 'https://www.start.gg/league/kombat-ranking-mk1/standings' },
-            { slug: 'kombat-zone-ranking-brasil-tekken-8-2026', label: 'Kombat Zone Tekken 8 BR 2026', rankingUrl: 'https://www.start.gg/league/kombat-zone-ranking-brasil-tekken-8-2026/standings' },
-            { slug: 'kampeonato-brasileiro-de-mortal-kombat-1-temporada-1', label: 'Kampeonato Brasileiro MK1', rankingUrl: 'https://www.start.gg/league/kampeonato-brasileiro-de-mortal-kombat-1-temporada-1/standings' },
-            { slug: 'liga-de-kolossos-2-edi-o', label: 'Liga de Kolossos 2ª Edição', rankingUrl: 'https://www.start.gg/league/liga-de-kolossos-2-edi-o/standings' }
-        ];
+    { slug: 'kombat-ranking-mk1', label: 'Kombat Ranking MK1', rankingUrl: 'https://www.start.gg/league/kombat-ranking-mk1/standings' },
+    { slug: 'kombat-zone-ranking-brasil-tekken-8-2026', label: 'Kombat Zone Tekken 8 BR 2026', rankingUrl: 'https://www.start.gg/league/kombat-zone-ranking-brasil-tekken-8-2026/standings' },
+    { slug: 'kampeonato-brasileiro-de-mortal-kombat-1-temporada-1', label: 'Kampeonato Brasileiro MK1', rankingUrl: 'https://www.start.gg/league/kampeonato-brasileiro-de-mortal-kombat-1-temporada-1/standings' },
+    { slug: 'liga-de-kolossos-2-edi-o', label: 'Liga de Kolossos 2ª Edição', rankingUrl: 'https://www.start.gg/league/liga-de-kolossos-2-edi-o/standings' },
+    { slug: 'world-warrior-2026-capcom-pro-tour', label: 'World Warrior 2026 - Capcom Pro Tour', rankingUrl: 'https://www.start.gg/league/world-warrior-2026-capcom-pro-tour/standings' },
+    { slug: 'rocket-league-championship-series-2026', label: 'Rocket League Championship Series 2026', rankingUrl: 'https://www.start.gg/league/rocket-league-championship-series-2026/standings' },
+    { slug: '2xko-community-events-program-mixed-duo', label: '2XKO Community Events - Mixed Duo', rankingUrl: 'https://www.start.gg/league/2xko-community-events-program-mixed-duo/standings' },
+    { slug: '2xko', label: '2XKO', rankingUrl: 'https://www.start.gg/league/2xko/standings' }
+];
         let leagueTournamentMap = {};
         function verificarLigaDeTorneio(url) { const slug = extrairSlugTorneio(url); return slug ? (leagueTournamentMap[slug] || null) : null; }
         async function carregarTorneiosDasLigas() {
@@ -734,7 +786,92 @@
         function toggleChangelog() { document.getElementById('changelog_modal').classList.toggle('hidden'); }
         function carregarJogos() { document.getElementById("campo_jogo").innerHTML = games.filter(g => !g.hidden).map(g => `<option value="${g.value}">${g.label}</option>`).join(''); }
         function atualizarPainelDisponibilidade(nodes) { const painel = document.getElementById("painel_disponibilidade"), grid = document.getElementById("grid_dias"); painel.classList.remove("hidden"); grid.innerHTML = ""; const datasOcupadas = nodes.map(t => { const d = new Date(t.startAt*1000); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }); for (let i=0;i<14;i++){ const dia=new Date();dia.setDate(dia.getDate()+i);const isoDia=`${dia.getFullYear()}-${String(dia.getMonth()+1).padStart(2,'0')}-${String(dia.getDate()).padStart(2,'0')}`;const isOcupado=datasOcupadas.includes(isoDia);grid.innerHTML+=`<div class="day-slot ${isOcupado?'day-busy':'day-available'} p-3 rounded-lg text-center border"><span class="text-[9px] uppercase font-bold opacity-70">${dia.toLocaleDateString('pt-BR',{weekday:'short'})}</span><span class="text-xs font-black block">${dia.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span><span class="text-[10px] font-bold mt-1 uppercase"><i class="fa-solid ${isOcupado?'fa-calendar-xmark':'fa-calendar-plus'}"></i> ${isOcupado?'Ocupado':'Livre'}</span></div>`; } }
-        function iniciarTimer(id,ts){const a=ts*1000;const i=setInterval(()=>{const e=document.getElementById(id);if(!e){clearInterval(i);return;}const d=a-new Date().getTime();if(d<0){e.innerHTML="INSCRIÇÕES ENCERRADAS";clearInterval(i);return;}const D=Math.floor(d/86400000),h=Math.floor((d%86400000)/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);e.innerHTML=`⏳ Faltam: ${D}d ${h}h ${m}m ${s}s`;},1000);}
+        function iniciarTimer(id, registrationClosesAt, checkInData, eventStartAt, eventState) {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            const now = () => new Date().getTime();
+            const regClose = registrationClosesAt ? registrationClosesAt * 1000 : null;
+            const startAt = eventStartAt ? eventStartAt * 1000 : null;
+            const state = eventState || 'CREATED';
+
+            // Só considera check-in se habilitado e com valores válidos
+            let checkIn = null;
+            if (checkInData && checkInData.checkInEnabled && typeof checkInData.checkInDuration === 'number' && typeof checkInData.checkInBuffer === 'number' && startAt) {
+                const durationMs = checkInData.checkInDuration * 1000;
+                const bufferMs = checkInData.checkInBuffer * 1000;
+                if (durationMs >= 0 && bufferMs >= 0) {
+                    checkIn = {
+                        enabled: true,
+                        start: startAt - durationMs - bufferMs,
+                        end: startAt - bufferMs
+                    };
+                }
+            }
+
+            const interval = setInterval(() => {
+                if (!document.getElementById(id)) { clearInterval(interval); return; }
+                const t = now();
+
+                // 1. Inscrições ainda abertas
+                if (regClose && t < regClose) {
+                    const diff = regClose - t;
+                    const D = Math.floor(diff / 86400000);
+                    const h = Math.floor((diff % 86400000) / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
+                    el.innerHTML = `⏳ INSCRIÇÕES FECHAM EM: ${D}d ${h}h ${m}m ${s}s`;
+                    el.className = 'timer-red';
+                    return;
+                }
+
+                // 2. Check-in aberto
+                if (checkIn && t >= checkIn.start && t < checkIn.end) {
+                    const diff = checkIn.end - t;
+                    const h = Math.floor(diff / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
+                    el.innerHTML = `✅ CHECK-IN ABERTO – FECHA EM: ${h}h ${m}m ${s}s`;
+                    el.className = 'timer-checkin';
+                    return;
+                }
+
+                // 3. Após inscrições e check-in (se existir), mostrar status da bracket
+                const afterReg = regClose ? t >= regClose : true;
+                const afterCheckIn = checkIn ? t >= checkIn.end : true;
+
+                if (afterReg && afterCheckIn) {
+                    if (state === 'READY' || state === 'CALLED') {
+                        el.innerHTML = '🎮 BRACKET INICIANDO EM BREVE';
+                        el.className = 'timer-ready';
+                    } else if (state === 'ACTIVE') {
+                        el.innerHTML = '🔴 BRACKET EM ANDAMENTO';
+                        el.className = 'timer-active';
+                    } else if (state === 'COMPLETED') {
+                        el.innerHTML = '🏁 EVENTO FINALIZADO';
+                        el.className = 'timer-completed';
+                    } else {
+                        el.innerHTML = 'INSCRIÇÕES ENCERRADAS';
+                        el.className = 'timer-end';
+                    }
+                    clearInterval(interval);
+                    return;
+                }
+
+                // 4. Check-in ainda não começou (pós-inscrições)
+                if (checkIn && t < checkIn.start && regClose && t >= regClose) {
+                    const diff = checkIn.start - t;
+                    const h = Math.floor(diff / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
+                    el.innerHTML = `⏰ CHECK-IN INICIA EM: ${h}h ${m}m ${s}s`;
+                    el.className = 'timer-checkin-pending';
+                    return;
+                }
+
+                el.innerHTML = '';
+            }, 1000);
+        }
         function formatarDataGoogle(ts){return new Date(ts*1000).toISOString().replace(/-|:|\.\d+/g,"");}
         function gerarLinkGoogleCalendar(t){const i=formatarDataGoogle(t.startAt),f=formatarDataGoogle(t.startAt+7200),d=encodeURIComponent(`Inscrição: https://start.gg${t.url}`);return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(t.name)}&dates=${i}/${f}&details=${d}`;}
         // Removido o addEventListener que alterava as opções de região – agora as opções permanecem fixas.
@@ -742,12 +879,39 @@
         async function pesquisar() {
             const gameObj = games.find(g => g.value === document.getElementById("campo_jogo").value), typeVal = document.getElementById("campo_tipo").value, localVal = document.getElementById("campo_local").value;
             const container = document.getElementById("resultados"), status = document.getElementById("status"); container.innerHTML = ""; status.classList.remove("hidden");
-            // Query sem countryCode – o filtro por região é feito manualmente depois
-            const query = `query Tournaments($vId:[ID], $isOnline:Boolean){tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline}}){nodes{name,url,startAt,registrationClosesAt,isRegistrationOpen,addrState,numAttendees,images{url,type},streams{streamName,streamSource},streamQueue{stream{streamName},sets{state}},owner{name,slug,player{gamerTag},location{country}}}}}`;
+            // Query com dados de check-in, estado do evento e detalhes da stream queue
+            const query = `query Tournaments($vId:[ID], $isOnline:Boolean){
+              tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline}}){
+                nodes{
+                  name,url,startAt,registrationClosesAt,isRegistrationOpen,addrState,numAttendees,
+                  images{url,type},streams{streamName,streamSource},
+                  streamQueue{
+                    stream{streamName},
+                    sets{
+                      state
+                      fullRoundText
+                      phaseGroup{
+                        displayIdentifier
+                        phase{
+                          name
+                        }
+                      }
+                    }
+                  },
+                  owner{name,slug,player{gamerTag},location{country}},
+                  events(limit:1){
+                    checkInEnabled
+                    checkInDuration
+                    checkInBuffer
+                    state
+                    phases { state }
+                  }
+                }
+              }
+            }`;
             try {
                 const vars = { vId: [gameObj.videogameId], isOnline: typeVal === "online" };
                 const json = await callStartGG(query, vars); let nodes = json.data?.tournaments?.nodes || [];
-                // Filtro de região (América do Sul) aplicado independentemente do formato (online/offline)
                 if (localVal === "south-america") {
                     nodes = nodes.filter(t => southAmericanCountries.includes(t.owner?.location?.country));
                 }
@@ -756,16 +920,38 @@
                     const timerId = `timer_${i}_${Date.now()}`, dEnc = t.registrationClosesAt ? new Date(t.registrationClosesAt*1000) : null, inscritos = t.numAttendees ?? 0;
                     const rawSlug = (t.owner?.slug||'').replace('user/',''), toName = t.owner?.player?.gamerTag || (!/^[0-9A-F]{6,}$/i.test(rawSlug) && rawSlug ? rawSlug : (t.owner?.name || 'Desconhecido'));
                     const banner = t.images?.find(img => img.type==='banner')?.url || t.images?.[0]?.url || '';
-                    let streamHTML = ""; const isLiveNow = t.streamQueue && t.streamQueue.some(q => q.sets && q.sets.some(s => s.state===2));
+                    let streamHTML = ""; const isLiveNow = t.streamQueue && t.streamQueue.some(q => q.sets && q.sets.some(s => s.state===2 || s.state==='ACTIVE'));
                     if (t.streams && t.streams.length > 0) { const hasTwitch = t.streams.some(s => s.streamSource==='TWITCH'), hasYT = t.streams.some(s => s.streamSource==='YOUTUBE'); streamHTML = `<div style="position:absolute;bottom:8px;right:10px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.7);padding:3px 8px;border-radius:4px;border:1px solid ${isLiveNow?'#dc2626':'rgba(255,255,255,0.1)'}">${isLiveNow?'<span class="animate-pulse flex h-2 w-2 rounded-full bg-red-500 mr-1"></span><span class="text-[9px] font-black text-red-500 uppercase mr-2 tracking-tighter">LIVE</span>':'<span class="text-[9px] font-black text-white uppercase tracking-tighter">Stream:</span>'}${hasTwitch?'<i class="fa-brands fa-twitch text-[#a970ff] text-xs"></i>':''}${hasYT?'<i class="fa-brands fa-youtube text-[#ff0000] text-xs"></i>':''}</div>`; }
+                    
+                    // Badge da stream queue (primeiro set = partida atual ou próxima)
+                    let bracketBadgeHTML = '';
+                    const firstSet = t.streamQueue?.[0]?.sets?.[0];
+                    if (firstSet && firstSet.fullRoundText) {
+                        const phaseName = firstSet.phaseGroup?.phase?.name || '';
+                        const roundText = firstSet.fullRoundText;
+                        const displayText = phaseName ? `${phaseName} — ${roundText}` : roundText;
+                        const setState = firstSet.state;
+                        if (setState === 'ACTIVE' || setState === 2) {
+                            bracketBadgeHTML = `<div class="bracket-live-badge">🔴 ${displayText}</div>`;
+                        } else if (setState === 'CALLED') {
+                            bracketBadgeHTML = `<div class="bracket-upcoming-badge">⏳ EM BREVE: ${displayText}</div>`;
+                        }
+                    }
+
                     const ligaInfo = verificarLigaDeTorneio(t.url);
                     const ligaBadgeHTML = ligaInfo ? `<div class="league-badge"><i class="fa-solid fa-trophy" style="font-size:8px;color:#a855f7;"></i>&nbsp;${ligaInfo.label}</div>` : '';
                     const rankingBtnHTML = ligaInfo ? `<button onclick="abrirRanking('${ligaInfo.slug}','${ligaInfo.label.replace(/'/g,"\\'")}','${ligaInfo.rankingUrl}')" class="btn-ranking w-full"><i class="fa-solid fa-ranking-star"></i> RANKING</button>` : '';
 
                     const card = document.createElement("div"); card.className = "glass-card rounded-xl flex flex-col justify-between overflow-hidden";
                     let encHTML = dEnc ? `<div class="mt-1"><p class="text-[10px] text-slate-400 font-bold uppercase italic">Inscrições encerram em: ${dEnc.toLocaleDateString('pt-BR')} às ${dEnc.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</p><p id="${timerId}" class="text-[10px] timer-red uppercase italic">Calculando...</p></div>` : "";
-                    card.innerHTML = `<div style="position:relative;height:130px;overflow:hidden;background:#111;">${banner?`<img src="${banner}" alt="banner" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">`:''}<div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,20,24,0.9) 100%);"></div><div style="position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;"><span class="text-[10px] bg-red-900 text-red-100 px-2 py-1 rounded font-bold uppercase tracking-wider">${typeVal}</span><span class="text-xs text-white font-bold" style="text-shadow:0 1px 4px rgba(0,0,0,0.8)">${new Date(t.startAt*1000).toLocaleDateString('pt-BR')}</span></div><div class="attendees-icon-left" onclick="event.stopPropagation();abrirAttendees('${t.url}')" title="Ver Inscritos"><i class="fa-solid fa-users text-xs"></i></div>${streamHTML}</div><div class="p-5 flex flex-col flex-1">${ligaBadgeHTML}<h3 class="font-bold text-lg text-white mb-2 leading-tight">${t.name}</h3><p class="text-[11px] font-black uppercase ${t.isRegistrationOpen?'text-green-500':'text-red-500'}">${t.isRegistrationOpen?'Inscrição Aberta':'Inscrição Fechada'}</p><div class="flex flex-col gap-1 mt-2"><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-users"></i> ${inscritos} inscrito${inscritos!==1?'s':''}</p><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-crown"></i> TO: ${toName}</p></div>${encHTML}<p class="text-sm text-slate-400 mt-3 italic">${t.addrState?`<i class="fas fa-map-marker-alt"></i> ${t.addrState}`:`<i class="fas fa-globe"></i> ${t.owner?.location?.country||'Online'}`}</p><div class="mt-4 space-y-2">${rankingBtnHTML}<a href="https://start.gg${t.url}" target="_blank" class="block text-center bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-lg uppercase text-sm tracking-tighter transition shadow-sm">Página do Torneio</a><a href="${gerarLinkGoogleCalendar(t)}" target="_blank" class="block text-center btn-calendar text-slate-300 font-bold py-2 rounded-lg transition uppercase text-[10px] tracking-wider"><i class="fa-solid fa-calendar-plus mr-1"></i> Add ao Google Calendar</a><a href="javascript:void(0)" onclick="event.stopPropagation();abrirBracket('${t.url}')" class="btn-bracket"><i class="fa-solid fa-sitemap mr-1"></i> BRACKET</a></div></div>`;
-                    container.appendChild(card); if (t.registrationClosesAt) iniciarTimer(timerId, t.registrationClosesAt);
+                    card.innerHTML = `<div style="position:relative;height:130px;overflow:hidden;background:#111;">${banner?`<img src="${banner}" alt="banner" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">`:''}<div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,20,24,0.9) 100%);"></div><div style="position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;"><span class="text-[10px] bg-red-900 text-red-100 px-2 py-1 rounded font-bold uppercase tracking-wider">${typeVal}</span><span class="text-xs text-white font-bold" style="text-shadow:0 1px 4px rgba(0,0,0,0.8)">${new Date(t.startAt*1000).toLocaleDateString('pt-BR')}</span></div><div class="attendees-icon-left" onclick="event.stopPropagation();abrirAttendees('${t.url}')" title="Ver Inscritos"><i class="fa-solid fa-users text-xs"></i></div>${streamHTML}</div><div class="p-5 flex flex-col flex-1">${bracketBadgeHTML}${ligaBadgeHTML}<h3 class="font-bold text-lg text-white mb-2 leading-tight">${t.name}</h3><p class="text-[11px] font-black uppercase ${t.isRegistrationOpen?'text-green-500':'text-red-500'}">${t.isRegistrationOpen?'Inscrição Aberta':'Inscrição Fechada'}</p><div class="flex flex-col gap-1 mt-2"><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-users"></i> ${inscritos} inscrito${inscritos!==1?'s':''}</p><p class="text-[11px] font-bold text-slate-400 uppercase"><i class="fas fa-crown"></i> TO: ${toName}</p></div>${encHTML}<p class="text-sm text-slate-400 mt-3 italic">${t.addrState?`<i class="fas fa-map-marker-alt"></i> ${t.addrState}`:`<i class="fas fa-globe"></i> ${t.owner?.location?.country||'Online'}`}</p><div class="mt-4 space-y-2">${rankingBtnHTML}<a href="https://start.gg${t.url}" target="_blank" class="block text-center bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-lg uppercase text-sm tracking-tighter transition shadow-sm">Página do Torneio</a><a href="${gerarLinkGoogleCalendar(t)}" target="_blank" class="block text-center btn-calendar text-slate-300 font-bold py-2 rounded-lg transition uppercase text-[10px] tracking-wider"><i class="fa-solid fa-calendar-plus mr-1"></i> Add ao Google Calendar</a><a href="javascript:void(0)" onclick="event.stopPropagation();abrirBracket('${t.url}')" class="btn-bracket"><i class="fa-solid fa-sitemap mr-1"></i> BRACKET</a></div></div>`;
+                    container.appendChild(card);
+                    const eventData = t.events?.[0] || null;
+                    const checkInData = eventData ? { checkInEnabled: eventData.checkInEnabled, checkInDuration: eventData.checkInDuration, checkInBuffer: eventData.checkInBuffer } : null;
+                    const eventState = eventData?.state || null;
+                    if (t.registrationClosesAt || (checkInData && checkInData.checkInEnabled)) {
+                        iniciarTimer(timerId, t.registrationClosesAt, checkInData, t.startAt, eventState);
+                    }
                 });
             } catch (e) { status.classList.add("hidden"); }
         }
