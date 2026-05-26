@@ -949,8 +949,8 @@
         async function pesquisar() {
             const gameObj = games.find(g => g.value === document.getElementById("campo_jogo").value), typeVal = document.getElementById("campo_tipo").value, localVal = document.getElementById("campo_local").value;
             const container = document.getElementById("resultados"), status = document.getElementById("status"); container.innerHTML = ""; status.classList.remove("hidden");
-            const query = `query Tournaments($vId:[ID], $isOnline:Boolean){
-              tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline}}){
+            const query = `query Tournaments($vId:[ID], $isOnline:Boolean, $country:String){
+              tournaments(query:{perPage:40, filter:{upcoming:true, videogameIds:$vId, hasOnlineEvents:$isOnline, countryCode:$country}}){
                 nodes{
                   name,url,startAt,registrationClosesAt,isRegistrationOpen,addrState,numAttendees,
                   images{url,type},streams{streamName,streamSource},
@@ -980,10 +980,14 @@
             }`;
             try {
                 const vars = { vId: [gameObj.videogameId], isOnline: typeVal === "online" };
+                if (typeVal === "offline") vars.country = localVal;
+                
                 const json = await callStartGG(query, vars); let nodes = json.data?.tournaments?.nodes || [];
-                if (localVal === "south-america") {
+                
+                if (typeVal === "online" && localVal === "south-america") {
                     nodes = nodes.filter(t => southAmericanCountries.includes(t.owner?.location?.country));
                 }
+                
                 status.classList.add("hidden"); atualizarPainelDisponibilidade(nodes);
                 nodes.forEach((t, i) => {
                     const timerId = `timer_${i}_${Date.now()}`, dEnc = t.registrationClosesAt ? new Date(t.registrationClosesAt*1000) : null, inscritos = t.numAttendees ?? 0;
@@ -1023,6 +1027,8 @@
                 });
             } catch (e) { status.classList.add("hidden"); }
         }
+
+        document.getElementById('campo_tipo').addEventListener('change', function(e) { document.getElementById('campo_local').innerHTML = e.target.value === 'offline' ? `<option value="BR">Brasil</option><option value="US">Estados Unidos</option>` : `<option value="south-america">América do Sul</option><option value="worldwide">Mundo Inteiro</option>`; });
 
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { fecharAttendees(); fecharRanking(); fecharBracket(); } });
         carregarJogos(); carregarTorneiosDasLigas();
